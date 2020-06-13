@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :require_user_logged_in, only: [:index, :show, :followings, :followers]
+  before_action :require_user_logged_in, only: [:index, :show, :destroy, :followings, :followers, :likes]
   
   def index
     @users = User.order(id: :desc).page(params[:page]).per(10)
@@ -27,6 +27,13 @@ class UsersController < ApplicationController
     end
   end
   
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    flash[:success] = 'ユーザの登録を解除しました。'
+    redirect_to signup_url
+  end
+  
   def followings
     @user = User.find(params[:id])
     @followings = @user.followings.page(params[:page])
@@ -36,6 +43,12 @@ class UsersController < ApplicationController
   def followers
     @user = User.find(params[:id])
     @followers = @user.followers.page(params[:page])
+    counts(@user)
+  end
+  
+  def likes
+    @user = User.find(params[:id])
+    @fav_messages = @user.fav_messages.page(params[:page])
     counts(@user)
   end
   

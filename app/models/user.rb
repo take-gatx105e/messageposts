@@ -6,15 +6,16 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
   has_secure_password
   
-  has_many :messages
-  has_many :relationships
-  has_many :followings, through: :relationships, source: :follow
-  has_many :reverses_of_relationship, class_name: 'Relationship', foreign_key: 'follow_id'
-  has_many :followers, through: :reverses_of_relationship, source: :user
+  has_many :messages, dependent: :destroy
+  has_many :relationships, dependent: :destroy
+  has_many :followings, through: :relationships, source: :follow, dependent: :destroy
+  has_many :reverses_of_relationship, class_name: 'Relationship', foreign_key: 'follow_id', dependent: :destroy
+  has_many :followers, through: :reverses_of_relationship, source: :user, dependent: :destroy
   
   def follow(other_user)
     unless self == other_user
       self.relationships.find_or_create_by(follow_id: other_user.id)
+      # 中間テーブル内に{user_id: self.id, follow_id: other_user.id}なデータがあるかを検索しなければ作る
     end
   end
   
@@ -29,5 +30,21 @@ class User < ApplicationRecord
   
   def feed_messages
     Message.where(user_id: self.following_ids + [self.id])
+  end
+  
+  has_many :favorites
+  has_many :fav_messages, through: :favorites, source: :message
+  
+  def favorite(message)
+    self.favorites.find_or_create_by(message_id: message.id)
+  end
+  
+  def unfavorite(message)
+    favorite = self.favorites.find_by(message_id: message.id)
+    favorite.destroy if favorite
+  end
+  
+  def favorited?(message)
+    self.fav_messages.include?(message)
   end
 end
