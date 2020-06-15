@@ -32,8 +32,8 @@ class User < ApplicationRecord
     Message.where(user_id: self.following_ids + [self.id])
   end
   
-  has_many :favorites
-  has_many :fav_messages, through: :favorites, source: :message
+  has_many :favorites, dependent: :destroy
+  has_many :fav_messages, through: :favorites, source: :message, dependent: :destroy
   
   def favorite(message)
     self.favorites.find_or_create_by(message_id: message.id)
