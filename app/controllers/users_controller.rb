@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @messages = @user.messages.order(id: :desc).page(params[:page])
+    @messages = @user.messages.order(id: :desc).page(params[:page]).per(6)
     counts(@user)
   end
 
@@ -36,19 +36,19 @@ class UsersController < ApplicationController
   
   def followings
     @user = User.find(params[:id])
-    @followings = @user.followings.page(params[:page])
+    @followings = @user.followings.page(params[:page]).per(6)
     counts(@user)
   end
   
   def followers
     @user = User.find(params[:id])
-    @followers = @user.followers.page(params[:page])
+    @followers = @user.followers.page(params[:page]).per(6)
     counts(@user)
   end
   
   def likes
     @user = User.find(params[:id])
-    @fav_messages = @user.fav_messages.page(params[:page])
+    @fav_messages = @user.fav_messages.page(params[:page]).per(6)
     counts(@user)
   end
   

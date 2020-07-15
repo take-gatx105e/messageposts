@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
   def index
     # if logged_in?
       @message = current_user.messages.build  # form_with 用
-      @messages = current_user.feed_messages.order(id: :desc).page(params[:page])
+      @messages = current_user.feed_messages.order(id: :desc).page(params[:page]).per(6)
     # end
   end
 
@@ -15,7 +15,7 @@ class MessagesController < ApplicationController
       flash[:success] = 'メッセージを投稿しました。'
       redirect_to root_url
     else
-      @messages = current_user.feed_messages.order(id: :desc).page(params[:page]).per(5)
+      @messages = current_user.feed_messages.order(id: :desc).page(params[:page]).per(6)
       flash.now[:danger] = 'メッセージの投稿に失敗しました。'
       render 'messages/index'
     end

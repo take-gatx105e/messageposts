@@ -13,3 +13,13 @@
  *= require_tree .
  *= require_self
  */
+
+@media screen and (min-width: 576px){
+  /*576px以上で適用する内容*/
+  .container {
+    max-width: 1920px;
+  }
+  .row {
+    margin: 36px;
+  }
+}
