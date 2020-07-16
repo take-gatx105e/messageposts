@@ -1,4 +1,4 @@
-<ul class="list-unstyled">
+<ul class="list-unstyled p-3">
   <% messages.each do |message| %>
     <li class="media mb-3">
       <img class="mr-2 rounded" src="<%= gravatar_url(message.user, { size: 50 }) %>" alt="">
@@ -32,5 +32,7 @@
       </div>
     </li>
   <% end %>
-  <%= paginate messages %>
+  <div class="pt-4">
+    <%= paginate messages %>
+  </div>
 </ul>
